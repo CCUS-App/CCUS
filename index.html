@@ -1,27 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en"><head>  <meta charset="UTF-8"><meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
 
-<head>
+«»
 
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>CCUS Home</title>
-
-  <link
+  <title>CCUS Home</title>  <link
     rel="stylesheet"
-    href="style.css"
-  >
-
-  <style>
-
-    /* =========================================
-       MESSAGE MODAL
-    ========================================= */
+    href="./style.css"
+  >  <style>
 
     .message-modal {
       display: none;
@@ -102,430 +88,326 @@
       padding: 20px;
     }
 
-    /* =========================================
-       CLICKABLE CARDS
-    ========================================= */
-
     .feature-card {
       cursor: pointer;
     }
 
-  </style>
-
-</head>
-
-
-<body>
-
-<div class="app">
-
-
-  <!-- =========================================
+  </style></head><body><div class="app">  <!-- =========================================
        HEADER
-  ========================================== -->
+  ========================================== -->  <header class="header"><h1>
+  CCUS
+</h1>
 
-  <header class="header">
+<p id="welcomeUser">
+  Welcome to CCUS Community
+</p>
 
-    <h1>
-      CCUS
-    </h1>
-
-    <p id="welcomeUser">
-      Welcome to CCUS Community
-    </p>
-
-  </header>
-
-
-  <!-- =========================================
+  </header>  <!-- =========================================
        BALANCES
-  ========================================== -->
+  ========================================== -->  <div class="balance-row"><div class="balance-card">
 
-  <div class="balance-row">
+  <p>
+    Main Balance
+  </p>
 
-    <!-- MAIN BALANCE -->
-
-    <div class="balance-card">
-
-      <p>
-        Main Balance
-      </p>
-
-      <h2 id="balance">
-        ETB 0.00
-      </h2>
-
-    </div>
-
-
-    <!-- SECURITY DEPOSIT -->
-
-    <div class="balance-card">
-
-      <p>
-        Sec. Deposit
-      </p>
-
-      <h2 id="securityDeposit">
-        ETB 0.00
-      </h2>
-
-    </div>
-
-  </div>
-
-
-  <!-- =========================================
-       ACTIONS
-  ========================================== -->
-
-  <div class="actions">
-
-
-    <!-- DEPOSIT -->
-
-    <div
-      class="action-btn"
-      onclick="location.href='deposit.html'"
-    >
-
-      <span>
-        💰
-      </span>
-
-      Deposit
-
-    </div>
-
-
-    <!-- WITHDRAW -->
-
-    <div
-      class="action-btn"
-      onclick="location.href='withdraw.html'"
-    >
-
-      <span>
-        💳
-      </span>
-
-      Withdraw
-
-    </div>
-
-
-    <!-- REWARDS -->
-
-    <div
-      class="action-btn"
-      onclick="location.href='rewards.html'"
-    >
-
-      <span>
-        🎁
-      </span>
-
-      Rewards
-
-    </div>
-
-
-    <!-- TEAM -->
-
-    <div
-      class="action-btn"
-      onclick="location.href='team.html'"
-    >
-
-      <span>
-        👥
-      </span>
-
-      Team
-
-    </div>
-
-  </div>
-
-
-  <!-- =========================================
-       CCUS CENTER
-  ========================================== -->
-
-  <h2 class="section-title">
-    CCUS Center
+  <h2 id="balance">
+    ETB 0.00
   </h2>
 
-
-  <div class="cards">
-
-
-    <!-- =======================================
-         DAILY TASKS
-    ======================================== -->
-
-    <div
-      class="feature-card"
-      onclick="location.href='tasks.html'"
-    >
-
-      <h3>
-        🎯 Daily Tasks
-      </h3>
-
-      <p>
-        Complete tasks and earn rewards
-      </p>
-
-    </div>
-
-
-    <!-- =======================================
-         INVESTMENT
-    ======================================== -->
-
-    <div
-      class="feature-card"
-      onclick="location.href='investment.html'"
-    >
-
-      <h3>
-        📈 Investment
-      </h3>
-
-      <p>
-        Invest your balance and track your investments
-      </p>
-
-    </div>
-
-
-    <!-- =======================================
-         SPIN WHEEL
-    ======================================== -->
-
-    <div
-      class="feature-card"
-      onclick="location.href='spin.html'"
-    >
-
-      <h3>
-        🎡 Spin Wheel
-      </h3>
-
-      <p>
-        Try your luck daily
-      </p>
-
-    </div>
-
-
-    <!-- =======================================
-         LEADERBOARD
-    ======================================== -->
-
-    <div
-      class="feature-card"
-      onclick="location.href='leaderboard.html'"
-    >
-
-      <h3>
-        🏆 Leaderboard
-      </h3>
-
-      <p>
-        Compare your progress
-      </p>
-
-    </div>
-
-
-    <!-- =======================================
-         SUPPORT
-    ======================================== -->
-
-    <div
-      class="feature-card"
-      onclick="location.href='support.html'"
-    >
-
-      <h3>
-        💬 CCUS Support
-      </h3>
-
-      <p>
-        Contact our support team
-      </p>
-
-    </div>
-
-
-    <!-- =======================================
-         MESSAGE
-    ======================================== -->
-
-    <div
-      class="feature-card"
-      id="messageCard"
-    >
-
-      <h3>
-        💬 Message
-      </h3>
-
-      <p>
-        Messages from CCUS Admin
-      </p>
-
-    </div>
-
-  </div>
-
-
-  <!-- =========================================
-       BOTTOM NAVIGATION
-  ========================================== -->
-
-  <nav class="bottom-nav">
-
-
-    <!-- HOME -->
-
-    <div>
-
-      🏠
-      <br>
-
-      Home
-
-    </div>
-
-
-    <!-- WALLET -->
-
-    <div
-      onclick="location.href='wallet.html'"
-    >
-
-      💰
-      <br>
-
-      Wallet
-
-    </div>
-
-
-    <!-- REWARD -->
-
-    <div
-      onclick="location.href='rewards.html'"
-    >
-
-      🎁
-      <br>
-
-      Reward
-
-    </div>
-
-
-    <!-- PROFILE -->
-
-    <div
-      onclick="location.href='profile.html'"
-    >
-
-      👤
-      <br>
-
-      Profile
-
-    </div>
-
-  </nav>
-
 </div>
 
 
-<!-- =========================================
-     MESSAGE MODAL
-========================================== -->
+<div class="balance-card">
+
+  <p>
+    Sec. Deposit
+  </p>
+
+  <h2 id="securityDeposit">
+    ETB 0.00
+  </h2>
+
+</div>
+
+  </div>  <!-- =========================================
+       ACTIONS
+  ========================================== -->  <div class="actions"><!-- DEPOSIT -->
 
 <div
-  id="messageModal"
-  class="message-modal"
+  class="action-btn"
+  onclick="location.href='./deposit.html'"
 >
 
+  <span>
+    💰
+  </span>
 
-  <div class="message-box">
-
-
-    <!-- MESSAGE HEADER -->
-
-    <div class="message-header">
-
-      <h2>
-        💬 Message
-      </h2>
-
-
-      <button
-        type="button"
-        id="closeMessage"
-        class="close-message"
-      >
-
-        ×
-
-      </button>
-
-    </div>
-
-
-    <!-- MESSAGE LIST -->
-
-    <div id="messageList">
-
-      <div class="message-loading">
-
-        Loading messages...
-
-      </div>
-
-    </div>
-
-  </div>
+  Deposit
 
 </div>
 
 
-<!-- =========================================
+<!-- WITHDRAW -->
+
+<div
+  class="action-btn"
+  onclick="location.href='./withdraw.html'"
+>
+
+  <span>
+    💳
+  </span>
+
+  Withdraw
+
+</div>
+
+
+<!-- REWARD -->
+
+<div
+  class="action-btn"
+  onclick="location.href='./reward.html'"
+>
+
+  <span>
+    🎁
+  </span>
+
+  Reward
+
+</div>
+
+
+<!-- TEAM -->
+
+<div
+  class="action-btn"
+  onclick="location.href='./team-report.html'"
+>
+
+  <span>
+    👥
+  </span>
+
+  Team
+
+</div>
+
+  </div>  <!-- =========================================
+       CCUS CENTER
+  ========================================== -->  <h2 class="section-title">
+    CCUS Center
+  </h2>  <div class="cards"><!-- DAILY TASKS -->
+
+<div
+  class="feature-card"
+  onclick="location.href='./task.html'"
+>
+
+  <h3>
+    🎯 Daily Tasks
+  </h3>
+
+  <p>
+    Complete tasks and earn rewards
+  </p>
+
+</div>
+
+
+<!-- INVESTMENT -->
+
+<div
+  class="feature-card"
+  onclick="location.href='./investment.html'"
+>
+
+  <h3>
+    📈 Investment
+  </h3>
+
+  <p>
+    Invest your balance and track your investments
+  </p>
+
+</div>
+
+
+<!-- MESSAGE -->
+
+<div
+  class="feature-card"
+  id="messageCard"
+>
+
+  <h3>
+    💬 Message
+  </h3>
+
+  <p>
+    Messages from CCUS Admin
+  </p>
+
+</div>
+
+
+<!-- WALLET -->
+
+<div
+  class="feature-card"
+  onclick="location.href='./wallet.html'"
+>
+
+  <h3>
+    💰 Wallet
+  </h3>
+
+  <p>
+    View your wallet and balance
+  </p>
+
+</div>
+
+
+<!-- PROFILE -->
+
+<div
+  class="feature-card"
+  onclick="location.href='./profile.html'"
+>
+
+  <h3>
+    👤 Profile
+  </h3>
+
+  <p>
+    Manage your profile
+  </p>
+
+</div>
+
+
+<!-- TRANSACTIONS -->
+
+<div
+  class="feature-card"
+  onclick="location.href='./transaction.html'"
+>
+
+  <h3>
+    📋 Transactions
+  </h3>
+
+  <p>
+    View your transaction history
+  </p>
+
+</div>
+
+  </div>  <!-- =========================================
+       BOTTOM NAVIGATION
+  ========================================== -->  <nav class="bottom-nav"><!-- HOME -->
+
+<div>
+
+  🏠
+  <br>
+
+  Home
+
+</div>
+
+
+<!-- WALLET -->
+
+<div
+  onclick="location.href='./wallet.html'"
+>
+
+  💰
+  <br>
+
+  Wallet
+
+</div>
+
+
+<!-- REWARD -->
+
+<div
+  onclick="location.href='./reward.html'"
+>
+
+  🎁
+  <br>
+
+  Reward
+
+</div>
+
+
+<!-- PROFILE -->
+
+<div
+  onclick="location.href='./profile.html'"
+>
+
+  👤
+  <br>
+
+  Profile
+
+</div>
+
+  </nav></div><!-- =========================================
+     MESSAGE MODAL
+========================================== --><div
+  id="messageModal"
+  class="message-modal"
+>  <div class="message-box"><div class="message-header">
+
+  <h2>
+    💬 Message
+  </h2>
+
+  <button
+    type="button"
+    id="closeMessage"
+    class="close-message"
+  >
+    ×
+  </button>
+
+</div>
+
+
+<div id="messageList">
+
+  <div class="message-loading">
+    Loading messages...
+  </div>
+
+</div>
+
+  </div></div><!-- =========================================
      MAIN APP JS
-========================================== -->
-
-<script
+========================================== --><script
   type="module"
-  src="app.js"
-></script>
-
-
-<!-- =========================================
+  src="./app.js"
+></script><!-- =========================================
      MESSAGE JS
-========================================== -->
+========================================== --><script type="module">
 
-<script type="module">
-
-  import { db } from "./firebase-config.js";
+  import { db }
+    from "./firebase-config.js";
 
   import {
     collection,
     getDocs
-  } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+  }
+  from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
 
-
-  // =========================================
-  // ELEMENTS
-  // =========================================
 
   const messageCard =
     document.getElementById(
@@ -592,7 +474,7 @@
 
 
   // =========================================
-  // CLOSE WHEN CLICK OUTSIDE
+  // CLOSE OUTSIDE
   // =========================================
 
   messageModal?.addEventListener(
@@ -669,10 +551,6 @@
             item.data();
 
 
-          // =================================
-          // HIDE INACTIVE MESSAGE
-          // =================================
-
           if (
             data.active === false
           ) {
@@ -685,10 +563,6 @@
           messageCount++;
 
 
-          // =================================
-          // MESSAGE CARD
-          // =================================
-
           const card =
             document.createElement(
               "div"
@@ -698,10 +572,6 @@
           card.className =
             "message-card-item";
 
-
-          // =================================
-          // TITLE
-          // =================================
 
           const title =
             document.createElement(
@@ -716,10 +586,6 @@
               "CCUS Message"
             );
 
-
-          // =================================
-          // MESSAGE TEXT
-          // =================================
 
           const message =
             document.createElement(
@@ -741,10 +607,6 @@
             message
           );
 
-
-          // =================================
-          // CREATED DATE
-          // =================================
 
           if (
             data.createdAt &&
@@ -783,10 +645,6 @@
       );
 
 
-      // =================================
-      // NO ACTIVE MESSAGE
-      // =================================
-
       if (
         messageCount === 0
       ) {
@@ -824,9 +682,5 @@
 
   }
 
-</script>
-
-
-</body>
-
-</html>
+</script></body></html>
+            
