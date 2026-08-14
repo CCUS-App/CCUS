@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>CCUS Daily Tasks</title>
+
+  <link
+    rel="stylesheet"
+    href="./style.css"
+  >
+
+  <style>
+
+    #taskList {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    #taskList .profile-card {
+      margin: 0;
+      padding: 12px;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    #taskList .profile-card h3 {
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    #taskList .profile-card p {
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    #taskList video {
+      display: block;
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #000;
+    }
+
+    #taskList button {
+      width: 100%;
+      font-size: 12px;
+      padding: 9px;
+      margin-top: 8px;
+    }
+
+    .task-status {
+      font-weight: bold;
+    }
+
+    .task-success {
+      color: #2e7d32;
+    }
+
+    .task-pending {
+      color: #f9a825;
+    }
+
+    .task-error {
+      color: #d32f2f;
+    }
+
+    @media (max-width: 500px) {
+
+      #taskList {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      #taskList .profile-card {
+        padding: 9px;
+      }
+
+      #taskList video {
+        height: 100px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <h1>🎯 Daily Tasks</h1>
+
+  <p>
+    Complete tasks and earn rewards.
+  </p>
+
+
+  <div id="taskList">
+
+    <p>
+      Loading tasks...
+    </p>
+
+  </div>
+
+
+  <button
+    type="button"
+    onclick="location.href='./home.html'"
+  >
+    ← Back to Home
+  </button>
+
+</div>
+
+
+<!-- DAILY TASK JAVASCRIPT -->
+
+<script
+  type="module"
+  src="./task.js"
+></script>
+
+
+</body>
+
+</html>
