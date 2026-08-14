@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>CCUS Invite Friends</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>CCUS</h1>
+
+  <h2>🔗 Invite Friends</h2>
+
+
+  <!-- INVITE LINK -->
+  <div class="profile-card">
+
+    <h3>🌐 Invite Link</h3>
+
+    <p>
+      Share this link with your friends.
+    </p>
+
+    <input
+      id="inviteLink"
+      type="text"
+      readonly
+      placeholder="Loading invite link...">
+
+    <button
+      type="button"
+      id="copyLinkBtn">
+
+      📋 Copy Link
+
+    </button>
+
+    <button
+      type="button"
+      id="shareLinkBtn">
+
+      📤 Share Link
+
+    </button>
+
+  </div>
+
+
+  <!-- REFERRAL CODE -->
+  <div class="profile-card">
+
+    <h3>🔑 My Referral Code</h3>
+
+    <h2 id="inviteReferralCode">
+      Loading...
+    </h2>
+
+  </div>
+
+
+  <!-- REFERRAL COUNT -->
+  <div class="profile-card">
+
+    <h3>👥 Total Referral</h3>
+
+    <p>
+      <span id="myReferralCount">0</span>
+      Friends
+    </p>
+
+  </div>
+
+
+  <!-- REFERRAL EARNINGS -->
+  <div class="profile-card">
+
+    <h3>💰 Referral Earnings</h3>
+
+    <p>
+      <b id="myReferralIncome">
+        ETB 0
+      </b>
+    </p>
+
+  </div>
+
+
+  <p>
+
+    <a href="profile.html">
+      ← Back Profile
+    </a>
+
+  </p>
+
+</div>
+
+
+<script type="module" src="app.js"></script>
+
+</body>
+
+</html>

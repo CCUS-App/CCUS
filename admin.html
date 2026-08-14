@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>CCUS Admin Dashboard</title>
+
+  <link rel="stylesheet" href="./style.css">
+
+  <style>
+
+    .section-title {
+      margin-top: 25px;
+    }
+
+    .profile-card {
+      margin-top: 15px;
+    }
+
+    .profile-card input,
+    .profile-card textarea,
+    .profile-card select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 11px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .profile-card textarea {
+      resize: vertical;
+    }
+
+    .profile-card button {
+      margin-top: 12px;
+    }
+
+    /* ==============================
+       MESSAGE
+    ============================== */
+
+    .message-section {
+      margin-top: 15px;
+    }
+
+    .message-section textarea {
+      min-height: 130px;
+    }
+
+    .message-admin-card {
+      margin-top: 12px;
+      padding: 16px;
+      border: 1px solid #ddd;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 3px 10px rgba(0,0,0,.06);
+    }
+
+    #adminMessageList {
+      margin-bottom: 20px;
+    }
+
+    /* ==============================
+       SETTINGS
+    ============================== */
+
+    .deposit-settings-card,
+    .withdrawal-settings-card,
+    .referral-settings-card {
+      margin-top: 15px;
+    }
+
+    .deposit-settings-card label,
+    .referral-level-card label {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .deposit-settings-card input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 11px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    #saveDepositSettings,
+    #saveReferralSettings,
+    #saveWithdrawalSettings {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* ==============================
+       RECHARGE
+    ============================== */
+
+    .home-recharge-setting {
+      margin-top: 15px;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: #f8f9fa;
+    }
+
+    .home-recharge-setting h4 {
+      margin-top: 0;
+    }
+
+    .recharge-amount-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .recharge-amount-row input {
+      flex: 1;
+      margin-top: 0;
+    }
+
+    .remove-recharge-btn {
+      width: auto !important;
+      margin-top: 0 !important;
+      padding: 9px 12px !important;
+      background: #e53935 !important;
+      color: white !important;
+      border: none !important;
+      border-radius: 8px !important;
+    }
+
+    #addRechargeAmountBtn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 11px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* ==============================
+       REFERRAL
+    ============================== */
+
+    .referral-level-card {
+      margin-top: 12px;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .referral-level-card h4 {
+      margin: 0 0 10px;
+    }
+
+    .referral-level-card input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    /* ==============================
+       WITHDRAWAL
+    ============================== */
+
+    .withdrawal-amount-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .withdrawal-amount-row span {
+      min-width: 65px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .withdrawal-amount-row input {
+      flex: 1;
+      margin-top: 0;
+    }
+
+    /* ==============================
+       TASK
+    ============================== */
+
+    .task-section {
+      margin-top: 20px;
+    }
+
+    .task-create-card {
+      padding: 16px;
+    }
+
+    .task-create-card h3 {
+      margin-top: 0;
+    }
+
+    .task-create-card input,
+    .task-create-card textarea {
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 12px;
+    }
+
+    .task-create-card textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    #taskVideoFile {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    #videoPreview {
+      display: none;
+      width: 100%;
+      max-height: 260px;
+      margin-top: 10px;
+      border-radius: 12px;
+      background: #000;
+    }
+
+    .cloudinary-info {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      background: #f5f7fa;
+      font-size: 12px;
+      color: #555;
+    }
+
+    /* ==============================
+       TASK LIST
+    ============================== */
+
+    #adminTaskList {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 10px;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+
+    .admin-task-card {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 3px 10px rgba(0,0,0,.06);
+      overflow: hidden;
+    }
+
+    .admin-task-card video {
+      display: block;
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 9px;
+      background: #000;
+    }
+
+    .admin-task-card button {
+      width: 100%;
+      padding: 7px;
+      margin-top: 6px;
+      border-radius: 7px;
+    }
+
+    .delete-task-btn,
+    .delete-investment-btn {
+      background: #e53935 !important;
+      color: #fff !important;
+      border: none !important;
+    }
+
+    /* ==============================
+       INVESTMENT
+    ============================== */
+
+    .investment-section {
+      margin-top: 25px;
+    }
+
+    .investment-form {
+      margin-top: 15px;
+    }
+
+    .investment-form label {
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 4px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .investment-form input[type="text"],
+    .investment-form input[type="number"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 11px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .investment-active {
+      display: flex !important;
+      align-items: center;
+      gap: 8px;
+      margin-top: 15px !important;
+    }
+
+    .investment-active input {
+      width: auto !important;
+      margin: 0 !important;
+    }
+
+    #saveInvestmentPlanBtn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    #cancelInvestmentEditBtn {
+      width: 100%;
+      padding: 11px;
+      margin-top: 8px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .investment-plan-card {
+      margin-top: 12px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 3px 10px rgba(0,0,0,.06);
+    }
+
+    .investment-plan-card h3 {
+      margin-top: 0;
+    }
+
+    .investment-plan-card button {
+      width: 100%;
+      margin-top: 7px;
+    }
+
+    .edit-investment-btn {
+      background: #1976d2 !important;
+      color: white !important;
+      border: none !important;
+    }
+
+    .toggle-investment-btn {
+      background: #f9a825 !important;
+      color: white !important;
+      border: none !important;
+    }
+
+    .investment-status-active {
+      color: #2e7d32;
+      font-weight: bold;
+    }
+
+    .investment-status-inactive {
+      color: #d32f2f;
+      font-weight: bold;
+    }
+
+    .success-text {
+      color: #2e7d32;
+    }
+
+    .error-text {
+      color: #d32f2f;
+    }
+
+    @media(max-width:900px) {
+      #adminTaskList {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media(max-width:600px) {
+      #adminTaskList {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 8px;
+      }
+
+      .admin-task-card video {
+        height: 110px;
+      }
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <!-- =========================================
+       ADMIN HEADER
+  ========================================== -->
+
+  <h1>CCUS Admin</h1>
+
+  <h2>Dashboard</h2>
+
+  <button
+    type="button"
+    id="adminLogout">
+    🚪 Logout
+  </button>
+
+
+  <!-- =========================================
+       USERS
+  ========================================== -->
+
+  <div class="profile-card">
+
+    <h3>👥 Users</h3>
+
+    <p>Manage users</p>
+
+    <div id="userList">
+      <p>Loading users...</p>
+    </div>
+
+  </div>
+
+
+  <!-- =========================================
+       DEPOSITS
+  ========================================== -->
+
+  <div class="profile-card">
+
+    <h3>💰 Deposits</h3>
+
+    <p>Approve and manage deposits</p>
+
+    <div id="depositList">
+      <p>Loading deposits...</p>
+    </div>
+
+  </div>
+
+
+  <!-- =========================================
+       WITHDRAWALS
+  ========================================== -->
+
+  <div class="profile-card">
+
+    <h3>💸 Withdrawals</h3>
+
+    <p>Manage withdrawals</p>
+
+    <div id="withdrawalList">
+      <p>Loading withdrawals...</p>
+    </div>
+
+  </div>
+
+
+  <!-- =========================================
+       SETTINGS
+  ========================================== -->
+
+  <h2 class="section-title">
+    ⚙️ Settings
+  </h2>
+
+
+  <!-- DEPOSIT SETTINGS -->
+
+  <div class="profile-card deposit-settings-card">
+
+    <h3>🏦 Deposit Account Settings</h3>
+
+    <p>
+      Manage the account users will use for deposits.
+    </p>
+
+    <label>Account Name</label>
+
+    <input
+      type="text"
+      id="accountName"
+      placeholder="Account Name"
+    >
+
+    <label>Account Number</label>
+
+    <input
+      type="text"
+      id="accountNumber"
+      placeholder="Account Number"
+    >
+
+    <button
+      type="button"
+      id="saveDepositSettings">
+      💾 Save Deposit Settings
+    </button>
+
+    <p id="depositSettingsStatus"></p>
+
+  </div>
+
+
+  <!-- =========================================
+       RECHARGE + REFERRAL
+  ========================================== -->
+
+  <div class="profile-card referral-settings-card">
+
+    <h3>
+      💰 Recharge & Referral Settings
+    </h3>
+
+
+    <div class="home-recharge-setting">
+
+      <h4>💰 Recharge Amounts</h4>
+
+      <p style="font-size:13px;color:#777;">
+        Add recharge amounts for users.
+      </p>
+
+      <div id="rechargeAmountList"></div>
+
+      <button
+        type="button"
+        id="addRechargeAmountBtn">
+        ➕ Add Recharge Amount
+      </button>
+
+    </div>
+
+
+    <!-- LEVELS -->
+
+    <div class="referral-level-card">
+      <h4>Level 1</h4>
+
+      <label>Minimum Recharge / Deposit</label>
+      <input type="number" id="level1Deposit" placeholder="250">
+
+      <label>Reward Amount</label>
+      <input type="number" id="level1Reward" placeholder="25">
+    </div>
+
+
+    <div class="referral-level-card">
+      <h4>Level 2</h4>
+
+      <label>Minimum Recharge / Deposit</label>
+      <input type="number" id="level2Deposit" placeholder="1100">
+
+      <label>Reward Amount</label>
+      <input type="number" id="level2Reward" placeholder="110">
+    </div>
+
+
+    <div class="referral-level-card">
+      <h4>Level 3</h4>
+
+      <label>Minimum Recharge / Deposit</label>
+      <input type="number" id="level3Deposit" placeholder="4000">
+
+      <label>Reward Amount</label>
+      <input type="number" id="level3Reward" placeholder="400">
+    </div>
+
+
+    <div class="referral-level-card">
+      <h4>Level 4</h4>
+
+      <label>Minimum Recharge / Deposit</label>
+      <input type="number" id="level4Deposit" placeholder="6000">
+
+      <label>Reward Amount</label>
+      <input type="number" id="level4Reward" placeholder="600">
+    </div>
+
+
+    <div class="referral-level-card">
+      <h4>Level 5</h4>
+
+      <label>Minimum Recharge / Deposit</label>
+      <input type="number" id="level5Deposit" placeholder="10000">
+
+      <label>Reward Amount</label>
+      <input type="number" id="level5Reward" placeholder="1000">
+    </div>
+
+
+    <div class="referral-level-card">
+      <h4>Level 6</h4>
+
+      <label>Minimum Recharge / Deposit</label>
+      <input type="number" id="level6Deposit" placeholder="15000">
+
+      <label>Reward Amount</label>
+      <input type="number" id="level6Reward" placeholder="1500">
+    </div>
+
+
+    <div class="referral-level-card">
+      <h4>Level 7</h4>
+
+      <label>Minimum Recharge / Deposit</label>
+      <input type="number" id="level7Deposit" placeholder="20000">
+
+      <label>Reward Amount</label>
+      <input type="number" id="level7Reward" placeholder="2000">
+    </div>
+
+
+    <div class="referral-level-card">
+      <h4>Level 8</h4>
+
+      <label>Minimum Recharge / Deposit</label>
+      <input type="number" id="level8Deposit" placeholder="30000">
+
+      <label>Reward Amount</label>
+      <input type="number" id="level8Reward" placeholder="3000">
+    </div>
+
+
+    <div class="referral-level-card">
+      <h4>Level 9</h4>
+
+      <label>Minimum Recharge / Deposit</label>
+      <input type="number" id="level9Deposit" placeholder="40000">
+
+      <label>Reward Amount</label>
+      <input type="number" id="level9Reward" placeholder="4000">
+    </div>
+
+
+    <button
+      type="button"
+      id="saveReferralSettings">
+      💾 Save / Update Recharge & Referral Settings
+    </button>
+
+    <p id="referralSaveStatus"></p>
+
+  </div>
+
+
+  <!-- =========================================
+       WITHDRAWAL SETTINGS
+  ========================================== -->
+
+  <div class="profile-card withdrawal-settings-card">
+
+    <h3>💸 Withdrawal Settings</h3>
+
+    <p>
+      Admin can change available withdrawal amounts.
+    </p>
+
+
+    <div class="withdrawal-amount-row">
+      <span>Amount 1</span>
+      <input type="number" id="withdrawalAmount1" placeholder="250">
+    </div>
+
+    <div class="withdrawal-amount-row">
+      <span>Amount 2</span>
+      <input type="number" id="withdrawalAmount2" placeholder="2500">
+    </div>
+
+    <div class="withdrawal-amount-row">
+      <span>Amount 3</span>
+      <input type="number" id="withdrawalAmount3" placeholder="6000">
+    </div>
+
+    <div class="withdrawal-amount-row">
+      <span>Amount 4</span>
+      <input type="number" id="withdrawalAmount4" placeholder="10000">
+    </div>
+
+    <div class="withdrawal-amount-row">
+      <span>Amount 5</span>
+      <input type="number" id="withdrawalAmount5" placeholder="15000">
+    </div>
+
+    <div class="withdrawal-amount-row">
+      <span>Amount 6</span>
+      <input type="number" id="withdrawalAmount6" placeholder="20000">
+    </div>
+
+    <div class="withdrawal-amount-row">
+      <span>Amount 7</span>
+      <input type="number" id="withdrawalAmount7" placeholder="25000">
+    </div>
+
+    <div class="withdrawal-amount-row">
+      <span>Amount 8</span>
+      <input type="number" id="withdrawalAmount8" placeholder="30000">
+    </div>
+
+    <div class="withdrawal-amount-row">
+      <span>Amount 9</span>
+      <input type="number" id="withdrawalAmount9" placeholder="45000">
+    </div>
+
+
+    <button
+      type="button"
+      id="saveWithdrawalSettings">
+      💾 Save / Update Withdrawal Settings
+    </button>
+
+    <p id="withdrawalSettingsStatus"></p>
+
+  </div>
+
+
+  <!-- =========================================
+       💬 MESSAGE
+  ========================================== -->
+
+  <div class="profile-card message-section">
+
+    <h3>💬 Message</h3>
+
+    <p>
+      Send a message to all CCUS users.
+    </p>
+
+    <input
+      type="text"
+      id="messageTitle"
+      placeholder="Message Title"
+    >
+
+    <textarea
+      id="messageText"
+      placeholder="Write your message..."
+      rows="6">
+    </textarea>
+
+    <label
+      style="
+        display:flex;
+        align-items:center;
+        gap:8px;
+        margin:12px 0;
+        font-weight:600;
+      ">
+
+      <input
+        type="checkbox"
+        id="messageActive"
+        checked
+      >
+
+      Active
+
+    </label>
+
+
+    <button
+      type="button"
+      id="publishMessageBtn">
+      📢 Publish Message
+    </button>
+
+    <p id="messageStatus"></p>
+
+  </div>
+
+
+  <h2 class="section-title">
+    📋 Published Messages
+  </h2>
+
+  <div id="adminMessageList">
+    <p>Loading messages...</p>
+  </div>
+
+
+  <!-- =========================================
+       📈 INVESTMENT PLANS MANAGER
+  ========================================== -->
+
+  <section class="investment-section">
+
+    <h2 class="section-title">
+      📈 Investment Plans Manager
+    </h2>
+
+
+    <!-- FORM -->
+
+    <div class="profile-card investment-form">
+
+      <h3>
+        ➕ Add / Edit Investment Plan
+      </h3>
+
+
+      <!-- IMPORTANT:
+           Empty = NEW PLAN
+           Has ID = EDIT PLAN
+      -->
+
+      <input
+        type="hidden"
+        id="investmentPlanId"
+        value=""
+      >
+
+
+      <label for="investmentPlanName">
+        Plan Name
+      </label>
+
+      <input
+        type="text"
+        id="investmentPlanName"
+        placeholder="Example: Basic Plan"
+        autocomplete="off"
+      >
+
+
+      <label for="investmentPlanAmount">
+        Investment Amount
+      </label>
+
+      <input
+        type="number"
+        id="investmentPlanAmount"
+        placeholder="Example: 1000"
+        min="1"
+        step="1"
+      >
+
+
+      <label for="investmentPlanProfit">
+        Daily Profit
+      </label>
+
+      <input
+        type="number"
+        id="investmentPlanProfit"
+        placeholder="Example: 50"
+        min="0"
+        step="1"
+      >
+
+
+      <label for="investmentPlanDuration">
+        Duration (Days)
+      </label>
+
+      <input
+        type="number"
+        id="investmentPlanDuration"
+        placeholder="Example: 30"
+        min="1"
+        step="1"
+      >
+
+
+      <label class="investment-active">
+
+        <input
+          type="checkbox"
+          id="investmentPlanActive"
+          checked
+        >
+
+        Active
+
+      </label>
+
+
+      <button
+        type="button"
+        id="saveInvestmentPlanBtn">
+        💾 Save Investment Plan
+      </button>
+
+
+      <button
+        type="button"
+        id="cancelInvestmentEditBtn"
+        style="display:none;">
+        ❌ Cancel Edit
+      </button>
+
+
+      <p
+        id="investmentPlanStatus"
+        style="margin-top:10px;">
+      </p>
+
+    </div>
+
+
+    <!-- PLAN LIST -->
+
+    <h3 style="margin-top:25px;">
+      📋 Available Investment Plans
+    </h3>
+
+
+    <div id="adminInvestmentPlans">
+
+      <p>
+        Loading investment plans...
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================================
+       🎬 TASK MANAGEMENT
+  ========================================== -->
+
+  <h2 class="section-title">
+    🎬 Task Management
+  </h2>
+
+
+  <div class="profile-card task-create-card">
+
+    <h3>🎬 Create New Task</h3>
+
+
+    <input
+      type="text"
+      id="taskTitle"
+      placeholder="Task Title"
+    >
+
+
+    <textarea
+      id="taskDescription"
+      placeholder="Task Description"
+      rows="4">
+    </textarea>
+
+
+    <label
+      style="
+        display:block;
+        margin-top:12px;
+        font-weight:bold;
+      ">
+      🎬 Task Video
+    </label>
+
+
+    <input
+      type="file"
+      id="taskVideoFile"
+      accept="video/*"
+    >
+
+
+    <p id="videoUploadStatus">
+      📱 Select a video from your Gallery.
+    </p>
+
+
+    <video
+      id="videoPreview"
+      controls
+      playsinline
+      preload="metadata">
+    </video>
+
+
+    <input
+      type="hidden"
+      id="taskVideoUrl"
+      value=""
+    >
+
+
+    <div class="cloudinary-info">
+
+      ☁️ Video will be uploaded automatically
+      to Cloudinary when you click
+      <b>Create Task</b>.
+
+    </div>
+
+
+    <input
+      type="number"
+      id="taskReward"
+      placeholder="Reward Amount"
+      min="1"
+      step="1"
+    >
+
+
+    <input
+      type="number"
+      id="taskWatchSeconds"
+      value="5"
+      min="5"
+      max="60"
+      placeholder="Required Watch Seconds"
+    >
+
+
+    <label
+      style="
+        display:flex;
+        align-items:center;
+        gap:8px;
+        margin:12px 0;
+        font-weight:600;
+      ">
+
+      <input
+        type="checkbox"
+        id="taskActive"
+        checked
+      >
+
+      Active Task
+
+    </label>
+
+
+    <button
+      type="button"
+      id="createTaskBtn">
+      Create Task
+    </button>
+
+
+    <p id="taskMessage"></p>
+
+  </div>
+
+
+  <h2 class="section-title">
+    📋 Published Tasks
+  </h2>
+
+
+  <div id="adminTaskList">
+
+    <p>
+      Loading tasks...
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================
+     ADMIN JS
+========================================== -->
+
+<script
+  type="module"
+  src="./admin.js">
+</script>
+
+
+<!-- =========================================
+     RECHARGE AMOUNT JS
+========================================== -->
+
+<script type="module">
+
+  import { db }
+    from "./firebase-config.js";
+
+  import {
+    doc,
+    getDoc
+  }
+  from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+
+
+  const rechargeAmountList =
+    document.getElementById(
+      "rechargeAmountList"
+    );
+
+
+  const addRechargeAmountBtn =
+    document.getElementById(
+      "addRechargeAmountBtn"
+    );
+
+
+  const defaultRechargeAmounts = [
+    250,
+    1100,
+    4000,
+    6000,
+    10000,
+    15000,
+    20000,
+    30000,
+    40000
+  ];
+
+
+  function createRechargeRow(
+    value = ""
+  ) {
+
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "recharge-amount-row";
+
+
+    const input =
+      document.createElement("input");
+
+    input.type =
+      "number";
+
+    input.min =
+      "1";
+
+    input.step =
+      "1";
+
+    input.placeholder =
+      "Recharge Amount";
+
+    input.value =
+      value;
+
+
+    const removeBtn =
+      document.createElement("button");
+
+    removeBtn.type =
+      "button";
+
+    removeBtn.textContent =
+      "🗑️";
+
+    removeBtn.className =
+      "remove-recharge-btn";
+
+
+    removeBtn.onclick =
+      () => row.remove();
+
+
+    row.appendChild(input);
+
+    row.appendChild(removeBtn);
+
+    rechargeAmountList.appendChild(row);
+
+  }
+
+
+  function getRechargeAmounts() {
+
+    const inputs =
+      rechargeAmountList.querySelectorAll(
+        "input"
+      );
+
+
+    const amounts = [];
+
+
+    inputs.forEach(
+      input => {
+
+        const value =
+          Number(input.value);
+
+
+        if (
+          Number.isFinite(value) &&
+          value > 0
+        ) {
+
+          amounts.push(value);
+
+        }
+
+      }
+    );
+
+
+    return [
+      ...new Set(amounts)
+    ];
+
+  }
+
+
+  function renderRechargeAmounts(
+    amounts
+  ) {
+
+    rechargeAmountList.innerHTML =
+      "";
+
+
+    if (
+      !Array.isArray(amounts) ||
+      amounts.length === 0
+    ) {
+
+      createRechargeRow("");
+
+      return;
+
+    }
+
+
+    amounts.forEach(
+      amount =>
+        createRechargeRow(amount)
+    );
+
+  }
+
+
+  async function loadRechargeAmounts() {
+
+    try {
+
+      const ref =
+        doc(
+          db,
+          "settings",
+          "referralSettings"
+        );
+
+
+      const snap =
+        await getDoc(ref);
+
+
+      if (
+        snap.exists() &&
+        Array.isArray(
+          snap.data().rechargeAmounts
+        ) &&
+        snap.data().rechargeAmounts.length
+      ) {
+
+        renderRechargeAmounts(
+          snap.data().rechargeAmounts
+        );
+
+      } else {
+
+        renderRechargeAmounts(
+          defaultRechargeAmounts
+        );
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Recharge settings error:",
+        error
+      );
+
+      renderRechargeAmounts(
+        defaultRechargeAmounts
+      );
+
+    }
+
+  }
+
+
+  addRechargeAmountBtn?.addEventListener(
+    "click",
+    () => createRechargeRow("")
+  );
+
+
+  window.getRechargeAmounts =
+    getRechargeAmounts;
+
+
+  window.renderRechargeAmounts =
+    renderRechargeAmounts;
+
+
+  window.loadRechargeAmounts =
+    loadRechargeAmounts;
+
+
+  loadRechargeAmounts();
+
+</script>
+
+
+</body>
+</html>

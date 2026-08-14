@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>CCUS Investment</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+  <style>
+
+    .investment-header {
+      margin-bottom: 20px;
+    }
+
+    .investment-balance {
+      margin: 15px 0 25px;
+      padding: 18px;
+      border-radius: 14px;
+      background: #ffffff;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .investment-balance p {
+      margin: 0 0 8px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .investment-balance h2 {
+      margin: 0;
+    }
+
+    .investment-plan-card {
+      margin-top: 15px;
+      padding: 18px;
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1px solid #e1e1e1;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+    }
+
+    .investment-plan-card h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    .investment-plan-card p {
+      margin: 7px 0;
+    }
+
+    .invest-now-btn {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #1976d2;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .invest-now-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .my-investment-card {
+      margin-top: 12px;
+      padding: 15px;
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1px solid #ddd;
+    }
+
+    .investment-status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .status-active {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-completed {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .loading-text {
+      text-align: center;
+      padding: 20px;
+      color: #777;
+    }
+
+    .error-text {
+      padding: 15px;
+      color: #c62828;
+      background: #ffebee;
+      border-radius: 10px;
+    }
+
+    .empty-text {
+      padding: 15px;
+      color: #777;
+      text-align: center;
+    }
+
+    .date-text {
+      font-size: 13px;
+      color: #666;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+  <!-- =========================================
+       HEADER
+  ========================================== -->
+
+  <div class="investment-header">
+
+    <h1>
+      CCUS
+    </h1>
+
+    <h2>
+      📈 Investment Plans
+    </h2>
+
+    <p>
+      Choose an investment plan below.
+    </p>
+
+  </div>
+
+
+  <!-- =========================================
+       AVAILABLE BALANCE
+  ========================================== -->
+
+  <div class="investment-balance">
+
+    <p>
+      Available Balance
+    </p>
+
+    <h2 id="investmentBalance">
+      ETB 0.00
+    </h2>
+
+  </div>
+
+
+  <!-- =========================================
+       AVAILABLE PLANS
+  ========================================== -->
+
+  <h2>
+    📋 Available Plans
+  </h2>
+
+  <div id="investmentPlans">
+
+    <p class="loading-text">
+      Loading investment plans...
+    </p>
+
+  </div>
+
+
+  <!-- =========================================
+       MY INVESTMENTS
+  ========================================== -->
+
+  <h2 style="margin-top:30px;">
+    💼 My Investments
+  </h2>
+
+  <div id="myInvestments">
+
+    <p class="loading-text">
+      Loading...
+    </p>
+
+  </div>
+
+
+  <!-- =========================================
+       BACK HOME
+  ========================================== -->
+
+  <p style="margin-top:25px;">
+
+    <a href="home.html">
+      ← Back Home
+    </a>
+
+  </p>
+
+
+</div>
+
+
+<!-- =========================================
+     FIREBASE
+========================================== -->
+
+<script type="module">
+
+  import {
+    auth,
+    db
+  } from "./firebase-config.js";
+
+
+  import {
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
+
+
+  import {
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    where,
+    runTransaction,
+    serverTimestamp,
+    Timestamp
+  } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+
+
+  // =========================================
+  // ELEMENTS
+  // =========================================
+
+  const balanceElement =
+    document.getElementById(
+      "investmentBalance"
+    );
+
+
+  const plansElement =
+    document.getElementById(
+      "investmentPlans"
+    );
+
+
+  const myInvestmentsElement =
+    document.getElementById(
+      "myInvestments"
+    );
+
+
+  let currentUser = null;
+
+
+  // =========================================
+  // AUTH STATE
+  // =========================================
+
+  onAuthStateChanged(
+    auth,
+    async (user) => {
+
+      if (!user) {
+
+        currentUser = null;
+
+        balanceElement.textContent =
+          "ETB 0.00";
+
+        plansElement.innerHTML = `
+          <p class="error-text">
+            ❌ Please login first.
+          </p>
+        `;
+
+        myInvestmentsElement.innerHTML = `
+          <p class="error-text">
+            Please login to see your investments.
+          </p>
+        `;
+
+        return;
+      }
+
+
+      currentUser = user;
+
+
+      console.log(
+        "INVESTMENT USER:",
+        user.uid
+      );
+
+
+      try {
+
+        /*
+         * IMPORTANT:
+         *
+         * First complete investments
+         * whose endDate has arrived.
+         */
+
+        await completeExpiredInvestments();
+
+
+        await loadInvestmentBalance();
+
+
+        await loadInvestmentPlans();
+
+
+        await loadMyInvestments();
+
+
+      } catch (error) {
+
+        console.error(
+          "INVESTMENT PAGE ERROR:",
+          error
+        );
+
+      }
+
+    }
+  );
+
+
+  // =========================================
+  // LOAD WALLET BALANCE
+  // =========================================
+
+  async function loadInvestmentBalance() {
+
+    if (!currentUser) {
+      return;
+    }
+
+
+    try {
+
+      const walletRef =
+        doc(
+          db,
+          "wallets",
+          currentUser.uid
+        );
+
+
+      const walletSnap =
+        await getDoc(
+          walletRef
+        );
+
+
+      if (!walletSnap.exists()) {
+
+        balanceElement.textContent =
+          "ETB 0.00";
+
+        return;
+      }
+
+
+      const wallet =
+        walletSnap.data();
+
+
+      const balance =
+        Number(
+          wallet.balance || 0
+        );
+
+
+      balanceElement.textContent =
+        "ETB " +
+        balance.toLocaleString(
+          undefined,
+          {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }
+        );
+
+
+    } catch (error) {
+
+      console.error(
+        "LOAD BALANCE ERROR:",
+        error
+      );
+
+
+      balanceElement.textContent =
+        "ETB 0.00";
+
+    }
+
+  }
+
+
+  // =========================================
+  // LOAD INVESTMENT PLANS
+  // =========================================
+
+  async function loadInvestmentPlans() {
+
+    plansElement.innerHTML = `
+      <p class="loading-text">
+        Loading investment plans...
+      </p>
+    `;
+
+
+    try {
+
+      const plansSnap =
+        await getDocs(
+          collection(
+            db,
+            "investmentPlans"
+          )
+        );
+
+
+      plansElement.innerHTML =
+        "";
+
+
+      let activePlans = 0;
+
+
+      plansSnap.forEach(
+        (item) => {
+
+          const plan =
+            item.data();
+
+
+          if (
+            plan.active !== true
+          ) {
+
+            return;
+          }
+
+
+          activePlans++;
+
+
+          const amount =
+            Number(
+              plan.amount || 0
+            );
+
+
+          const dailyProfit =
+            Number(
+              plan.dailyProfit || 0
+            );
+
+
+          const duration =
+            Number(
+              plan.duration || 0
+            );
+
+
+          const totalProfit =
+            dailyProfit *
+            duration;
+
+
+          const totalReturn =
+            amount +
+            totalProfit;
+
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+
+          card.className =
+            "investment-plan-card";
+
+
+          card.innerHTML = `
+
+            <h3>
+              📈 ${escapeHTML(
+                plan.name ||
+                "Investment Plan"
+              )}
+            </h3>
+
+            <p>
+              💰 Investment:
+              <b>
+                ETB ${amount.toLocaleString()}
+              </b>
+            </p>
+
+            <p>
+              💵 Daily Profit:
+              <b>
+                ETB ${dailyProfit.toLocaleString()}
+              </b>
+            </p>
+
+            <p>
+              📅 Duration:
+              <b>
+                ${duration} Days
+              </b>
+            </p>
+
+            <p>
+              📊 Total Profit:
+              <b>
+                ETB ${totalProfit.toLocaleString()}
+              </b>
+            </p>
+
+            <p>
+              💎 Total Return:
+              <b>
+                ETB ${totalReturn.toLocaleString()}
+              </b>
+            </p>
+
+            <button
+              type="button"
+              class="invest-now-btn"
+            >
+              🚀 Invest Now
+            </button>
+
+          `;
+
+
+          plansElement.appendChild(
+            card
+          );
+
+
+          const button =
+            card.querySelector(
+              ".invest-now-btn"
+            );
+
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              startInvestment(
+                item.id,
+                button
+              );
+
+            }
+          );
+
+        }
+      );
+
+
+      if (
+        activePlans === 0
+      ) {
+
+        plansElement.innerHTML = `
+          <p class="empty-text">
+            No investment plans available.
+          </p>
+        `;
+
+      }
+
+
+    } catch (error) {
+
+      console.error(
+        "LOAD PLANS ERROR:",
+        error
+      );
+
+
+      plansElement.innerHTML = `
+        <div class="error-text">
+
+          ❌ Failed to load investment plans.
+
+          <br><br>
+
+          ${escapeHTML(
+            error.message
+          )}
+
+        </div>
+      `;
+
+    }
+
+  }
+
+
+  // =========================================
+  // START INVESTMENT
+  // =========================================
+
+  async function startInvestment(
+    planId,
+    button
+  ) {
+
+    if (!currentUser) {
+
+      alert(
+        "Please login first."
+      );
+
+      return;
+    }
+
+
+    try {
+
+      button.disabled =
+        true;
+
+      button.textContent =
+        "Processing...";
+
+
+      // =======================================
+      // GET PLAN
+      // =======================================
+
+      const planRef =
+        doc(
+          db,
+          "investmentPlans",
+          planId
+        );
+
+
+      const planSnap =
+        await getDoc(
+          planRef
+        );
+
+
+      if (!planSnap.exists()) {
+
+        throw new Error(
+          "Investment plan not found."
+        );
+
+      }
+
+
+      const plan =
+        planSnap.data();
+
+
+      if (
+        plan.active !== true
+      ) {
+
+        throw new Error(
+          "This investment plan is inactive."
+        );
+
+      }
+
+
+      const amount =
+        Number(
+          plan.amount || 0
+        );
+
+
+      const dailyProfit =
+        Number(
+          plan.dailyProfit || 0
+        );
+
+
+      const duration =
+        Number(
+          plan.duration || 0
+        );
+
+
+      if (
+        !Number.isFinite(amount) ||
+        amount <= 0
+      ) {
+
+        throw new Error(
+          "Invalid investment amount."
+        );
+
+      }
+
+
+      if (
+        !Number.isFinite(dailyProfit) ||
+        dailyProfit < 0
+      ) {
+
+        throw new Error(
+          "Invalid daily profit."
+        );
+
+      }
+
+
+      if (
+        !Number.isFinite(duration) ||
+        duration <= 0
+      ) {
+
+        throw new Error(
+          "Invalid investment duration."
+        );
+
+      }
+
+
+      // =======================================
+      // CALCULATE
+      // =======================================
+
+      const totalProfit =
+        dailyProfit *
+        duration;
+
+
+      const totalReturn =
+        amount +
+        totalProfit;
+
+
+      // =======================================
+      // CONFIRM
+      // =======================================
+
+      const confirmed =
+        confirm(
+
+          "📈 Investment Confirmation\n\n" +
+
+          "Plan: " +
+          (plan.name ||
+            "Investment Plan") +
+
+          "\n\nInvestment: ETB " +
+          amount.toLocaleString() +
+
+          "\nDaily Profit: ETB " +
+          dailyProfit.toLocaleString() +
+
+          "\nDuration: " +
+          duration +
+          " days" +
+
+          "\nTotal Profit: ETB " +
+          totalProfit.toLocaleString() +
+
+          "\nTotal Return: ETB " +
+          totalReturn.toLocaleString() +
+
+          "\n\nProfit will be paid when the duration ends." +
+
+          "\n\nDo you want to continue?"
+
+        );
+
+
+      if (!confirmed) {
+
+        return;
+
+      }
+
+
+      // =======================================
+      // REFERENCES
+      // =======================================
+
+      const walletRef =
+        doc(
+          db,
+          "wallets",
+          currentUser.uid
+        );
+
+
+      const investmentRef =
+        doc(
+          collection(
+            db,
+            "investments"
+          )
+        );
+
+
+      // =======================================
+      // DATE CALCULATION
+      // =======================================
+
+      /*
+       * startDate:
+       * yeroo investment jalqabame
+       */
+
+      const startDate =
+        new Date();
+
+
+      /*
+       * endDate:
+       * startDate + duration days
+       */
+
+      const endDate =
+        new Date(
+          startDate.getTime() +
+          (
+            duration *
+            24 *
+            60 *
+            60 *
+            1000
+          )
+        );
+
+
+      // =======================================
+      // FIRESTORE TRANSACTION
+      // =======================================
+
+      await runTransaction(
+        db,
+        async (transaction) => {
+
+          const walletSnap =
+            await transaction.get(
+              walletRef
+            );
+
+
+          if (
+            !walletSnap.exists()
+          ) {
+
+            throw new Error(
+              "Wallet not found."
+            );
+
+          }
+
+
+          const wallet =
+            walletSnap.data();
+
+
+          const currentBalance =
+            Number(
+              wallet.balance || 0
+            );
+
+
+          if (
+            !Number.isFinite(
+              currentBalance
+            )
+          ) {
+
+            throw new Error(
+              "Invalid wallet balance."
+            );
+
+          }
+
+
+          if (
+            currentBalance < amount
+          ) {
+
+            throw new Error(
+
+              "Insufficient balance.\n\n" +
+
+              "Available: ETB " +
+              currentBalance.toLocaleString() +
+
+              "\nRequired: ETB " +
+              amount.toLocaleString()
+
+            );
+
+          }
+
+
+          // =================================
+          // UPDATE WALLET
+          // =================================
+
+          transaction.update(
+            walletRef,
+            {
+
+              balance:
+                currentBalance -
+                amount
+
+            }
+          );
+
+
+          // =================================
+          // CREATE INVESTMENT
+          // =================================
+
+          transaction.set(
+            investmentRef,
+            {
+
+              userId:
+                currentUser.uid,
+
+              planId:
+                planId,
+
+              planName:
+                plan.name ||
+                "Investment Plan",
+
+              amount:
+                amount,
+
+              dailyProfit:
+                dailyProfit,
+
+              duration:
+                duration,
+
+              totalProfit:
+                totalProfit,
+
+              totalReturn:
+                totalReturn,
+
+              /*
+               * Firestore Timestamp
+               */
+
+              startDate:
+                Timestamp.fromDate(
+                  startDate
+                ),
+
+              endDate:
+                Timestamp.fromDate(
+                  endDate
+                ),
+
+              status:
+                "active",
+
+              completed:
+                false,
+
+              createdAt:
+                serverTimestamp()
+
+            }
+          );
+
+        }
+      );
+
+
+      // =======================================
+      // SUCCESS
+      // =======================================
+
+      alert(
+
+        "✅ Investment started successfully!\n\n" +
+
+        "Investment: ETB " +
+        amount.toLocaleString() +
+
+        "\n\n" +
+
+        "End Date:\n" +
+        endDate.toLocaleString() +
+
+        "\n\n" +
+
+        "Total Return: ETB " +
+        totalReturn.toLocaleString() +
+
+        "\n\n" +
+
+        "Your profit will be paid when the investment duration ends."
+
+      );
+
+
+      await loadInvestmentBalance();
+
+
+      await loadMyInvestments();
+
+
+    } catch (error) {
+
+      console.error(
+        "START INVESTMENT ERROR:",
+        error
+      );
+
+
+      alert(
+        "❌ Investment failed:\n\n" +
+        error.message
+      );
+
+
+    } finally {
+
+      button.disabled =
+        false;
+
+      button.textContent =
+        "🚀 Invest Now";
+
+    }
+
+  }
+
+
+  // =========================================
+  // COMPLETE EXPIRED INVESTMENTS
+  // =========================================
+
+  async function completeExpiredInvestments() {
+
+    if (!currentUser) {
+      return;
+    }
+
+
+    try {
+
+      const investmentQuery =
+        query(
+          collection(
+            db,
+            "investments"
+          ),
+
+          where(
+            "userId",
+            "==",
+            currentUser.uid
+          ),
+
+          where(
+            "status",
+            "==",
+            "active"
+          )
+        );
+
+
+      const snapshot =
+        await getDocs(
+          investmentQuery
+        );
+
+
+      if (
+        snapshot.empty
+      ) {
+
+        return;
+
+      }
+
+
+      const now =
+        new Date();
+
+
+      for (
+        const item of snapshot.docs
+      ) {
+
+        const investment =
+          item.data();
+
+
+        // =================================
+        // CHECK END DATE
+        // =================================
+
+        if (
+          !investment.endDate
+        ) {
+
+          continue;
+
+        }
+
+
+        let endDate = null;
+
+
+        if (
+          typeof investment.endDate.toDate ===
+          "function"
+        ) {
+
+          endDate =
+            investment.endDate.toDate();
+
+        } else {
+
+          endDate =
+            new Date(
+              investment.endDate
+            );
+
+        }
+
+
+        if (
+          !endDate ||
+          Number.isNaN(
+            endDate.getTime()
+          )
+        ) {
+
+          continue;
+
+        }
+
+
+        // =================================
+        // NOT FINISHED
+        // =================================
+
+        if (
+          now < endDate
+        ) {
+
+          continue;
+
+        }
+
+
+        // =================================
+        // REFERENCES
+        // =================================
+
+        const investmentRef =
+          doc(
+            db,
+            "investments",
+            item.id
+          );
+
+
+        const walletRef =
+          doc(
+            db,
+            "wallets",
+            currentUser.uid
+          );
+
+
+        // =================================
+        // TRANSACTION
+        // =================================
+
+        await runTransaction(
+          db,
+          async (transaction) => {
+
+            const investmentSnap =
+              await transaction.get(
+                investmentRef
+              );
+
+
+            const walletSnap =
+              await transaction.get(
+                walletRef
+              );
+
+
+            if (
+              !investmentSnap.exists()
+            ) {
+
+              return;
+
+            }
+
+
+            if (
+              !walletSnap.exists()
+            ) {
+
+              throw new Error(
+                "Wallet not found."
+              );
+
+            }
+
+
+            const currentInvestment =
+              investmentSnap.data();
+
+
+            // =================================
+            // PREVENT DOUBLE PAYMENT
+            // =================================
+
+            if (
+              currentInvestment.completed ===
+                true ||
+              currentInvestment.status !==
+                "active"
+            ) {
+
+              return;
+
+            }
+
+
+            const investmentAmount =
+              Number(
+                currentInvestment.amount ||
+                0
+              );
+
+
+            const totalProfit =
+              Number(
+                currentInvestment.totalProfit ||
+                (
+                  Number(
+                    currentInvestment.dailyProfit ||
+                    0
+                  ) *
+                  Number(
+                    currentInvestment.duration ||
+                    0
+                  )
+                )
+              );
+
+
+            const totalReturn =
+              Number(
+                currentInvestment.totalReturn ||
+                (
+                  investmentAmount +
+                  totalProfit
+                )
+              );
+
+
+            if (
+              !Number.isFinite(
+                totalReturn
+              ) ||
+              totalReturn <= 0
+            ) {
+
+              throw new Error(
+                "Invalid investment return."
+              );
+
+            }
+
+
+            const wallet =
+              walletSnap.data();
+
+
+            const currentBalance =
+              Number(
+                wallet.balance || 0
+              );
+
+
+            const currentIncome =
+              Number(
+                wallet.income || 0
+              );
+
+
+            // =================================
+            // RETURN MONEY + PROFIT
+            // =================================
+
+            transaction.update(
+              walletRef,
+              {
+
+                balance:
+                  currentBalance +
+                  totalReturn,
+
+                income:
+                  currentIncome +
+                  totalProfit
+
+              }
+            );
+
+
+            // =================================
+            // COMPLETE
+            // =================================
+
+            transaction.update(
+              investmentRef,
+              {
+
+                status:
+                  "completed",
+
+                completed:
+                  true,
+
+                completedAt:
+                  serverTimestamp(),
+
+                paidAmount:
+                  totalReturn
+
+              }
+            );
+
+          }
+        );
+
+      }
+
+
+    } catch (error) {
+
+      console.error(
+        "COMPLETE INVESTMENTS ERROR:",
+        error
+      );
+
+    }
+
+  }
+
+
+  // =========================================
+  // LOAD MY INVESTMENTS
+  // =========================================
+
+  async function loadMyInvestments() {
+
+    if (!currentUser) {
+      return;
+    }
+
+
+    myInvestmentsElement.innerHTML = `
+      <p class="loading-text">
+        Loading...
+      </p>
+    `;
+
+
+    try {
+
+      const investmentsQuery =
+        query(
+
+          collection(
+            db,
+            "investments"
+          ),
+
+          where(
+            "userId",
+            "==",
+            currentUser.uid
+          )
+
+        );
+
+
+      const snapshot =
+        await getDocs(
+          investmentsQuery
+        );
+
+
+      myInvestmentsElement.innerHTML =
+        "";
+
+
+      if (
+        snapshot.empty
+      ) {
+
+        myInvestmentsElement.innerHTML = `
+          <p class="empty-text">
+            You have no investments yet.
+          </p>
+        `;
+
+        return;
+
+      }
+
+
+      const investments = [];
+
+
+      snapshot.forEach(
+        (item) => {
+
+          investments.push({
+
+            id:
+              item.id,
+
+            data:
+              item.data()
+
+          });
+
+        }
+      );
+
+
+      // =====================================
+      // NEWEST FIRST
+      // =====================================
+
+      investments.sort(
+        (a, b) => {
+
+          const aTime =
+            a.data.createdAt?.toMillis?.() ||
+            a.data.startDate?.toMillis?.() ||
+            0;
+
+
+          const bTime =
+            b.data.createdAt?.toMillis?.() ||
+            b.data.startDate?.toMillis?.() ||
+            0;
+
+
+          return bTime - aTime;
+
+        }
+      );
+
+
+      // =====================================
+      // DISPLAY
+      // =====================================
+
+      investments.forEach(
+        (item) => {
+
+          const data =
+            item.data;
+
+
+          const amount =
+            Number(
+              data.amount || 0
+            );
+
+
+          const dailyProfit =
+            Number(
+              data.dailyProfit || 0
+            );
+
+
+          const duration =
+            Number(
+              data.duration || 0
+            );
+
+
+          const totalProfit =
+            Number(
+              data.totalProfit ||
+              dailyProfit *
+              duration
+            );
+
+
+          const totalReturn =
+            Number(
+              data.totalReturn ||
+              amount +
+              totalProfit
+            );
+
+
+          // =================================
+          // START DATE
+          // =================================
+
+          let startDate =
+            "Not available";
+
+
+          if (
+            data.startDate &&
+            typeof data.startDate.toDate ===
+              "function"
+          ) {
+
+            startDate =
+              data.startDate
+                .toDate()
+                .toLocaleString();
+
+          }
+
+
+          // =================================
+          // END DATE
+          // =================================
+
+          let endDate =
+            "Not available";
+
+
+          if (
+            data.endDate &&
+            typeof data.endDate.toDate ===
+              "function"
+          ) {
+
+            endDate =
+              data.endDate
+                .toDate()
+                .toLocaleString();
+
+          }
+
+
+          // =================================
+          // STATUS
+          // =================================
+
+          const isCompleted =
+            data.completed === true ||
+            data.status === "completed";
+
+
+          const statusText =
+            isCompleted
+              ? "✅ Completed"
+              : "⏳ Active";
+
+
+          const statusClass =
+            isCompleted
+              ? "status-completed"
+              : "status-active";
+
+
+          // =================================
+          // CARD
+          // =================================
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+
+          card.className =
+            "my-investment-card";
+
+
+          card.innerHTML = `
+
+            <h3>
+              📈 ${escapeHTML(
+                data.planName ||
+                "Investment"
+              )}
+            </h3>
+
+            <p>
+              💰 Investment:
+              <b>
+                ETB ${amount.toLocaleString()}
+              </b>
+            </p>
+
+            <p>
+              💵 Daily Profit:
+              <b>
+                ETB ${dailyProfit.toLocaleString()}
+              </b>
+            </p>
+
+            <p>
+              📅 Duration:
+              <b>
+                ${duration} Days
+              </b>
+            </p>
+
+            <p>
+              📊 Total Profit:
+              <b>
+                ETB ${totalProfit.toLocaleString()}
+              </b>
+            </p>
+
+            <p>
+              💎 Total Return:
+              <b>
+                ETB ${totalReturn.toLocaleString()}
+              </b>
+            </p>
+
+            <p class="date-text">
+              🟢 Start:
+              <b>
+                ${escapeHTML(startDate)}
+              </b>
+            </p>
+
+            <p class="date-text">
+              🔴 End:
+              <b>
+                ${escapeHTML(endDate)}
+              </b>
+            </p>
+
+            <p>
+              Status:
+
+              <span
+                class="investment-status ${statusClass}"
+              >
+                ${statusText}
+              </span>
+
+            </p>
+
+            ${
+              isCompleted
+              ? `
+                <p>
+                  💰 Paid:
+                  <b>
+                    ETB ${totalReturn.toLocaleString()}
+                  </b>
+                </p>
+              `
+              : `
+                <p class="date-text">
+                  ⏳ Profit will be paid after
+                  the duration ends.
+                </p>
+              `
+            }
+
+          `;
+
+
+          myInvestmentsElement.appendChild(
+            card
+          );
+
+        }
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "LOAD MY INVESTMENTS ERROR:",
+        error
+      );
+
+
+      myInvestmentsElement.innerHTML = `
+        <div class="error-text">
+
+          ❌ Failed to load investments.
+
+          <br><br>
+
+          ${escapeHTML(
+            error.message
+          )}
+
+        </div>
+      `;
+
+    }
+
+  }
+
+
+  // =========================================
+  // ESCAPE HTML
+  // =========================================
+
+  function escapeHTML(
+    value
+  ) {
+
+    return String(
+      value ?? ""
+    )
+
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+
+      .replace(
+        /</g,
+        "&lt;"
+      )
+
+      .replace(
+        />/g,
+        "&gt;"
+      )
+
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+  }
+
+
+  // =========================================
+  // READY
+  // =========================================
+
+  console.log(
+    "✅ CCUS INVESTMENT SYSTEM READY"
+  );
+
+</script>
+
+</body>
+
+</html>

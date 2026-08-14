@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>CCUS Deposit</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+  <style>
+
+    .receiver-card {
+      margin-top: 15px;
+      padding: 18px;
+      border-radius: 15px;
+      background: #ffffff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .receiver-card h3 {
+      margin-top: 0;
+    }
+
+    .receiver-card label {
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 5px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    #accountName,
+    #accountNumber {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #f5f5f5;
+    }
+
+    #copyBtn {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    #paymentMethod,
+    #depositAmount,
+    #senderName,
+    #transactionRef {
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .deposit-info {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 10px;
+      background: #f5f7fa;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .amount-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 5px;
+    }
+
+    .amount-description {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 8px;
+    }
+
+    #depositStatus {
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    .loading {
+      color: #777;
+    }
+
+    .success {
+      color: #2e7d32;
+    }
+
+    .error {
+      color: #d32f2f;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <h1>CCUS</h1>
+
+  <h2>Deposit Funds</h2>
+
+
+  <!-- =========================================
+       RECEIVER INFORMATION
+  ========================================== -->
+
+  <div class="receiver-card">
+
+    <h3>Receiver Information</h3>
+
+    <label>
+      Account Name
+    </label>
+
+    <input
+      id="accountName"
+      type="text"
+      placeholder="Loading account name..."
+      readonly
+    >
+
+
+    <label>
+      Account Number
+    </label>
+
+    <input
+      id="accountNumber"
+      type="text"
+      placeholder="Loading account number..."
+      readonly
+    >
+
+
+    <button
+      id="copyBtn"
+      type="button"
+    >
+      📋 Copy Account Number
+    </button>
+
+
+    <p
+      id="accountSettingsStatus"
+      class="loading"
+    >
+      Loading deposit account...
+    </p>
+
+  </div>
+
+
+  <!-- =========================================
+       PAYMENT METHOD
+  ========================================== -->
+
+  <select id="paymentMethod">
+
+    <option value="">
+      Select Payment Method
+    </option>
+
+    <option value="CBE">
+      Commercial Bank of Ethiopia (CBE)
+    </option>
+
+  </select>
+
+
+  <!-- =========================================
+       RECHARGE AMOUNT
+  ========================================== -->
+
+  <div class="deposit-info">
+
+    <div class="amount-title">
+      💰 Recharge Amount
+    </div>
+
+    <div class="amount-description">
+      Select the amount you want to deposit.
+    </div>
+
+    <select id="depositAmount">
+
+      <option value="">
+        Loading recharge amounts...
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <!-- =========================================
+       SENDER NAME
+  ========================================== -->
+
+  <input
+    id="senderName"
+    type="text"
+    placeholder="Enter your full name"
+    autocomplete="name"
+  >
+
+
+  <!-- =========================================
+       TRANSACTION REFERENCE
+  ========================================== -->
+
+  <input
+    id="transactionRef"
+    type="text"
+    placeholder="Enter transaction reference"
+    autocomplete="off"
+  >
+
+
+  <!-- =========================================
+       SUBMIT DEPOSIT
+  ========================================== -->
+
+  <button
+    id="depositBtn"
+    type="button"
+  >
+    Submit Deposit
+  </button>
+
+
+  <p id="depositStatus"></p>
+
+
+  <p>
+    <a href="home.html">
+      ← Back Home
+    </a>
+  </p>
+
+</div>
+
+
+<!-- =========================================
+     MAIN APP
+========================================== -->
+
+<script
+  type="module"
+  src="./app.js"
+></script>
+
+
+<!-- =========================================
+     FIREBASE DEPOSIT SETTINGS
+========================================== -->
+
+<script type="module">
+
+  import { db } from "./firebase-config.js";
+
+  import {
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+
+
+  // =====================================================
+  // ELEMENTS
+  // =====================================================
+
+  const accountNameInput =
+    document.getElementById("accountName");
+
+  const accountNumberInput =
+    document.getElementById("accountNumber");
+
+  const accountSettingsStatus =
+    document.getElementById(
+      "accountSettingsStatus"
+    );
+
+  const depositAmount =
+    document.getElementById(
+      "depositAmount"
+    );
+
+
+  // =====================================================
+  // LOAD DEPOSIT SETTINGS
+  //
+  // FIRESTORE:
+  //
+  // settings
+  //    └── depositSettings
+  //
+  // Fields:
+  //
+  // accountName
+  // accountNumber
+  // rechargeAmounts
+  //
+  // Example:
+  //
+  // rechargeAmounts: [
+  //   250,
+  //   4000,
+  //   6000,
+  //   10000,
+  //   15000
+  // ]
+  //
+  // =====================================================
+
+  async function loadDepositSettings() {
+
+    try {
+
+      console.log(
+        "🔄 Loading CCUS deposit settings..."
+      );
+
+
+      const settingsRef =
+        doc(
+          db,
+          "settings",
+          "depositSettings"
+        );
+
+
+      const settingsSnap =
+        await getDoc(
+          settingsRef
+        );
+
+
+      // =================================================
+      // DOCUMENT NOT FOUND
+      // =================================================
+
+      if (!settingsSnap.exists()) {
+
+        console.warn(
+          "⚠️ settings/depositSettings does not exist."
+        );
+
+
+        accountNameInput.value = "";
+
+        accountNameInput.placeholder =
+          "Account name not configured";
+
+
+        accountNumberInput.value = "";
+
+        accountNumberInput.placeholder =
+          "Account number not configured";
+
+
+        depositAmount.innerHTML = `
+          <option value="">
+            No recharge amounts available
+          </option>
+        `;
+
+
+        accountSettingsStatus.textContent =
+          "⚠️ Deposit settings not found.";
+
+        accountSettingsStatus.className =
+          "error";
+
+
+        return;
+      }
+
+
+      // =================================================
+      // GET FIRESTORE DATA
+      // =================================================
+
+      const data =
+        settingsSnap.data();
+
+
+      console.log(
+        "✅ FIRESTORE DEPOSIT SETTINGS:",
+        data
+      );
+
+
+      // =================================================
+      // ACCOUNT NAME
+      // =================================================
+
+      const accountName =
+        String(
+          data.accountName ?? ""
+        ).trim();
+
+
+      accountNameInput.value =
+        accountName;
+
+
+      accountNameInput.placeholder =
+        accountName
+          ? "Account Name"
+          : "Account name not configured";
+
+
+      // =================================================
+      // ACCOUNT NUMBER
+      // =================================================
+
+      const accountNumber =
+        String(
+          data.accountNumber ?? ""
+        ).trim();
+
+
+      accountNumberInput.value =
+        accountNumber;
+
+
+      accountNumberInput.placeholder =
+        accountNumber
+          ? "Account Number"
+          : "Account number not configured";
+
+
+      // =================================================
+      // RECHARGE AMOUNTS
+      // =================================================
+
+      let rechargeAmounts = [];
+
+
+      if (
+        Array.isArray(
+          data.rechargeAmounts
+        )
+      ) {
+
+        rechargeAmounts =
+          data.rechargeAmounts;
+
+      }
+
+
+      // =================================================
+      // BACKWARD COMPATIBILITY
+      //
+      // If old rechargeAmount exists,
+      // use it as one option.
+      // =================================================
+
+      if (
+        rechargeAmounts.length === 0 &&
+        data.rechargeAmount !== undefined
+      ) {
+
+        const oldAmount =
+          Number(
+            data.rechargeAmount
+          );
+
+
+        if (
+          Number.isFinite(oldAmount) &&
+          oldAmount > 0
+        ) {
+
+          rechargeAmounts = [
+            oldAmount
+          ];
+
+        }
+
+      }
+
+
+      // =================================================
+      // CLEAN AMOUNTS
+      // =================================================
+
+      rechargeAmounts =
+        rechargeAmounts
+          .map(
+            (amount) =>
+              Number(amount)
+          )
+          .filter(
+            (amount) =>
+              Number.isFinite(amount) &&
+              amount > 0
+          );
+
+
+      // Remove duplicates
+
+      rechargeAmounts =
+        [...new Set(
+          rechargeAmounts
+        )];
+
+
+      // Sort smallest → largest
+
+      rechargeAmounts.sort(
+        (a, b) => a - b
+      );
+
+
+      console.log(
+        "💰 Recharge amounts:",
+        rechargeAmounts
+      );
+
+
+      // =================================================
+      // NO AMOUNTS
+      // =================================================
+
+      if (
+        rechargeAmounts.length === 0
+      ) {
+
+        depositAmount.innerHTML = `
+          <option value="">
+            No recharge amounts configured
+          </option>
+        `;
+
+      } else {
+
+        // ===============================================
+        // CLEAR OLD OPTIONS
+        // ===============================================
+
+        depositAmount.innerHTML = `
+          <option value="">
+            Select Recharge Amount
+          </option>
+        `;
+
+
+        // ===============================================
+        // CREATE ALL AMOUNT OPTIONS
+        // ===============================================
+
+        rechargeAmounts.forEach(
+          (amount) => {
+
+            const option =
+              document.createElement(
+                "option"
+              );
+
+
+            option.value =
+              String(amount);
+
+
+            option.textContent =
+              "ETB " +
+              amount.toLocaleString();
+
+
+            depositAmount.appendChild(
+              option
+            );
+
+          }
+        );
+
+
+        console.log(
+          "✅ Recharge amount options displayed."
+        );
+
+      }
+
+
+      // =================================================
+      // ACCOUNT STATUS
+      // =================================================
+
+      if (
+        accountName &&
+        accountNumber
+      ) {
+
+        accountSettingsStatus.textContent =
+          "✅ Deposit account information loaded.";
+
+        accountSettingsStatus.className =
+          "success";
+
+      } else {
+
+        accountSettingsStatus.textContent =
+          "⚠️ Deposit account information is incomplete.";
+
+        accountSettingsStatus.className =
+          "error";
+
+      }
+
+
+    } catch (error) {
+
+      console.error(
+        "❌ LOAD DEPOSIT SETTINGS ERROR:",
+        error
+      );
+
+
+      accountSettingsStatus.textContent =
+        "❌ Unable to load deposit settings.";
+
+      accountSettingsStatus.className =
+        "error";
+
+
+      depositAmount.innerHTML = `
+        <option value="">
+          Failed to load recharge amounts
+        </option>
+      `;
+
+    }
+
+  }
+
+
+  // =====================================================
+  // START
+  // =====================================================
+
+  loadDepositSettings();
+
+
+  // =====================================================
+  // EXPOSE FUNCTION
+  // =====================================================
+
+  window.loadDepositSettings =
+    loadDepositSettings;
+
+</script>
+
+
+<!-- =========================================
+     COPY ACCOUNT NUMBER
+========================================== -->
+
+<script>
+
+  const copyBtn =
+    document.getElementById(
+      "copyBtn"
+    );
+
+
+  copyBtn?.addEventListener(
+    "click",
+    async () => {
+
+      const accountNumber =
+        document.getElementById(
+          "accountNumber"
+        );
+
+
+      const value =
+        accountNumber?.value?.trim() ||
+        "";
+
+
+      if (!value) {
+
+        alert(
+          "Account number is not available."
+        );
+
+        return;
+      }
+
+
+      try {
+
+        await navigator.clipboard.writeText(
+          value
+        );
+
+
+        copyBtn.textContent =
+          "✅ Copied!";
+
+
+        setTimeout(
+          () => {
+
+            copyBtn.textContent =
+              "📋 Copy Account Number";
+
+          },
+          2000
+        );
+
+
+      } catch (error) {
+
+        accountNumber.select();
+
+        document.execCommand(
+          "copy"
+        );
+
+
+        copyBtn.textContent =
+          "✅ Copied!";
+
+
+        setTimeout(
+          () => {
+
+            copyBtn.textContent =
+              "📋 Copy Account Number";
+
+          },
+          2000
+        );
+
+      }
+
+    }
+  );
+
+</script>
+
+
+</body>
+
+</html>

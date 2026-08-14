@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>CCUS Home</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+  <style>
+
+    /* =========================================
+       MESSAGE MODAL
+    ========================================= */
+
+    .message-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 9999;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .message-box {
+      width: 100%;
+      max-width: 500px;
+      margin: 60px auto;
+      background: #fff;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .message-header h2 {
+      margin: 0;
+    }
+
+    .close-message {
+      border: none;
+      background: #e53935;
+      color: white;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .message-card-item {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 12px;
+      background: #f9f9f9;
+    }
+
+    .message-card-item h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+
+    .message-card-item p {
+      margin: 5px 0;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .message-date {
+      font-size: 12px;
+      color: #777;
+      margin-top: 10px;
+    }
+
+    .message-loading {
+      text-align: center;
+      padding: 20px;
+      color: #777;
+    }
+
+    .message-error {
+      color: #d32f2f;
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* =========================================
+       CLICKABLE CARDS
+    ========================================= */
+
+    .feature-card {
+      cursor: pointer;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+  <!-- =========================================
+       HEADER
+  ========================================== -->
+
+  <header class="header">
+
+    <h1>
+      CCUS
+    </h1>
+
+    <p id="welcomeUser">
+      Welcome to CCUS Community
+    </p>
+
+  </header>
+
+
+  <!-- =========================================
+       BALANCES
+  ========================================== -->
+
+  <div class="balance-row">
+
+    <!-- MAIN BALANCE -->
+
+    <div class="balance-card">
+
+      <p>
+        Main Balance
+      </p>
+
+      <h2 id="balance">
+        ETB 0.00
+      </h2>
+
+    </div>
+
+
+    <!-- SECURITY DEPOSIT -->
+
+    <div class="balance-card">
+
+      <p>
+        Sec. Deposit
+      </p>
+
+      <h2 id="securityDeposit">
+        ETB 0.00
+      </h2>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================
+       ACTIONS
+  ========================================== -->
+
+  <div class="actions">
+
+
+    <!-- DEPOSIT -->
+
+    <div
+      class="action-btn"
+      onclick="location.href='deposit.html'"
+    >
+
+      <span>
+        💰
+      </span>
+
+      Deposit
+
+    </div>
+
+
+    <!-- WITHDRAW -->
+
+    <div
+      class="action-btn"
+      onclick="location.href='withdraw.html'"
+    >
+
+      <span>
+        💳
+      </span>
+
+      Withdraw
+
+    </div>
+
+
+    <!-- REWARDS -->
+
+    <div
+      class="action-btn"
+      onclick="location.href='rewards.html'"
+    >
+
+      <span>
+        🎁
+      </span>
+
+      Rewards
+
+    </div>
+
+
+    <!-- TEAM -->
+
+    <div
+      class="action-btn"
+      onclick="location.href='team.html'"
+    >
+
+      <span>
+        👥
+      </span>
+
+      Team
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================
+       CCUS CENTER
+  ========================================== -->
+
+  <h2 class="section-title">
+    CCUS Center
+  </h2>
+
+
+  <div class="cards">
+
+
+    <!-- =======================================
+         DAILY TASKS
+    ======================================== -->
+
+    <div
+      class="feature-card"
+      onclick="location.href='tasks.html'"
+    >
+
+      <h3>
+        🎯 Daily Tasks
+      </h3>
+
+      <p>
+        Complete tasks and earn rewards
+      </p>
+
+    </div>
+
+
+    <!-- =======================================
+         INVESTMENT
+    ======================================== -->
+
+    <div
+      class="feature-card"
+      onclick="location.href='investment.html'"
+    >
+
+      <h3>
+        📈 Investment
+      </h3>
+
+      <p>
+        Invest your balance and track your investments
+      </p>
+
+    </div>
+
+
+    <!-- =======================================
+         SPIN WHEEL
+    ======================================== -->
+
+    <div
+      class="feature-card"
+      onclick="location.href='spin.html'"
+    >
+
+      <h3>
+        🎡 Spin Wheel
+      </h3>
+
+      <p>
+        Try your luck daily
+      </p>
+
+    </div>
+
+
+    <!-- =======================================
+         LEADERBOARD
+    ======================================== -->
+
+    <div
+      class="feature-card"
+      onclick="location.href='leaderboard.html'"
+    >
+
+      <h3>
+        🏆 Leaderboard
+      </h3>
+
+      <p>
+        Compare your progress
+      </p>
+
+    </div>
+
+
+    <!-- =======================================
+         SUPPORT
+    ======================================== -->
+
+    <div
+      class="feature-card"
+      onclick="location.href='support.html'"
+    >
+
+      <h3>
+        💬 CCUS Support
+      </h3>
+
+      <p>
+        Contact our support team
+      </p>
+
+    </div>
+
+
+    <!-- =======================================
+         MESSAGE
+    ======================================== -->
+
+    <div
+      class="feature-card"
+      id="messageCard"
+    >
+
+      <h3>
+        💬 Message
+      </h3>
+
+      <p>
+        Messages from CCUS Admin
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================
+       BOTTOM NAVIGATION
+  ========================================== -->
+
+  <nav class="bottom-nav">
+
+
+    <!-- HOME -->
+
+    <div>
+
+      🏠
+      <br>
+
+      Home
+
+    </div>
+
+
+    <!-- WALLET -->
+
+    <div
+      onclick="location.href='wallet.html'"
+    >
+
+      💰
+      <br>
+
+      Wallet
+
+    </div>
+
+
+    <!-- REWARD -->
+
+    <div
+      onclick="location.href='rewards.html'"
+    >
+
+      🎁
+      <br>
+
+      Reward
+
+    </div>
+
+
+    <!-- PROFILE -->
+
+    <div
+      onclick="location.href='profile.html'"
+    >
+
+      👤
+      <br>
+
+      Profile
+
+    </div>
+
+  </nav>
+
+</div>
+
+
+<!-- =========================================
+     MESSAGE MODAL
+========================================== -->
+
+<div
+  id="messageModal"
+  class="message-modal"
+>
+
+
+  <div class="message-box">
+
+
+    <!-- MESSAGE HEADER -->
+
+    <div class="message-header">
+
+      <h2>
+        💬 Message
+      </h2>
+
+
+      <button
+        type="button"
+        id="closeMessage"
+        class="close-message"
+      >
+
+        ×
+
+      </button>
+
+    </div>
+
+
+    <!-- MESSAGE LIST -->
+
+    <div id="messageList">
+
+      <div class="message-loading">
+
+        Loading messages...
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================
+     MAIN APP JS
+========================================== -->
+
+<script
+  type="module"
+  src="app.js"
+></script>
+
+
+<!-- =========================================
+     MESSAGE JS
+========================================== -->
+
+<script type="module">
+
+  import { db } from "./firebase-config.js";
+
+  import {
+    collection,
+    getDocs
+  } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+
+
+  // =========================================
+  // ELEMENTS
+  // =========================================
+
+  const messageCard =
+    document.getElementById(
+      "messageCard"
+    );
+
+
+  const messageModal =
+    document.getElementById(
+      "messageModal"
+    );
+
+
+  const closeMessage =
+    document.getElementById(
+      "closeMessage"
+    );
+
+
+  const messageList =
+    document.getElementById(
+      "messageList"
+    );
+
+
+  // =========================================
+  // OPEN MESSAGE
+  // =========================================
+
+  messageCard?.addEventListener(
+    "click",
+    async () => {
+
+      if (messageModal) {
+
+        messageModal.style.display =
+          "block";
+
+      }
+
+      await loadMessages();
+
+    }
+  );
+
+
+  // =========================================
+  // CLOSE MESSAGE
+  // =========================================
+
+  closeMessage?.addEventListener(
+    "click",
+    () => {
+
+      if (messageModal) {
+
+        messageModal.style.display =
+          "none";
+
+      }
+
+    }
+  );
+
+
+  // =========================================
+  // CLOSE WHEN CLICK OUTSIDE
+  // =========================================
+
+  messageModal?.addEventListener(
+    "click",
+    (event) => {
+
+      if (
+        event.target ===
+        messageModal
+      ) {
+
+        messageModal.style.display =
+          "none";
+
+      }
+
+    }
+  );
+
+
+  // =========================================
+  // LOAD MESSAGES
+  // =========================================
+
+  async function loadMessages() {
+
+    if (!messageList) {
+      return;
+    }
+
+
+    messageList.innerHTML = `
+      <div class="message-loading">
+        Loading messages...
+      </div>
+    `;
+
+
+    try {
+
+      const snapshot =
+        await getDocs(
+          collection(
+            db,
+            "message"
+          )
+        );
+
+
+      messageList.innerHTML =
+        "";
+
+
+      if (snapshot.empty) {
+
+        messageList.innerHTML = `
+          <div class="message-loading">
+            No messages available.
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      let messageCount = 0;
+
+
+      snapshot.forEach(
+        (item) => {
+
+          const data =
+            item.data();
+
+
+          // =================================
+          // HIDE INACTIVE MESSAGE
+          // =================================
+
+          if (
+            data.active === false
+          ) {
+
+            return;
+
+          }
+
+
+          messageCount++;
+
+
+          // =================================
+          // MESSAGE CARD
+          // =================================
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+
+          card.className =
+            "message-card-item";
+
+
+          // =================================
+          // TITLE
+          // =================================
+
+          const title =
+            document.createElement(
+              "h3"
+            );
+
+
+          title.textContent =
+            "📢 " +
+            (
+              data.title ||
+              "CCUS Message"
+            );
+
+
+          // =================================
+          // MESSAGE TEXT
+          // =================================
+
+          const message =
+            document.createElement(
+              "p"
+            );
+
+
+          message.textContent =
+            data.message ||
+            "";
+
+
+          card.appendChild(
+            title
+          );
+
+
+          card.appendChild(
+            message
+          );
+
+
+          // =================================
+          // CREATED DATE
+          // =================================
+
+          if (
+            data.createdAt &&
+            typeof data.createdAt.toDate ===
+            "function"
+          ) {
+
+            const date =
+              document.createElement(
+                "div"
+              );
+
+
+            date.className =
+              "message-date";
+
+
+            date.textContent =
+              data.createdAt
+                .toDate()
+                .toLocaleString();
+
+
+            card.appendChild(
+              date
+            );
+
+          }
+
+
+          messageList.appendChild(
+            card
+          );
+
+        }
+      );
+
+
+      // =================================
+      // NO ACTIVE MESSAGE
+      // =================================
+
+      if (
+        messageCount === 0
+      ) {
+
+        messageList.innerHTML = `
+          <div class="message-loading">
+            No active messages available.
+          </div>
+        `;
+
+      }
+
+
+    } catch (error) {
+
+      console.error(
+        "MESSAGE LOAD ERROR:",
+        error
+      );
+
+
+      messageList.innerHTML = `
+        <div class="message-error">
+
+          ❌ Failed to load messages.
+
+          <br><br>
+
+          Please check Firestore rules.
+
+        </div>
+      `;
+
+    }
+
+  }
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>CCUS Profile</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- PROFILE HEADER -->
+  <div class="profile-header">
+
+    <div class="avatar">
+      👤
+    </div>
+
+    <h2 id="profileName">Loading...</h2>
+
+    <p id="profileEmail">Loading...</p>
+
+  </div>
+
+
+  <!-- MAIN BALANCE -->
+  <div class="balance-card">
+
+    <p>Main Balance</p>
+
+    <h2 id="profileBalance">
+      ETB 0.00
+    </h2>
+
+    <button type="button"
+      onclick="window.location.href='deposit.html'">
+      💰 Recharge
+    </button>
+
+  </div>
+
+
+  <!-- SECURITY DEPOSIT -->
+  <div class="balance-card">
+
+    <p>Sec. Deposit</p>
+
+    <h2 id="profileDeposit">
+      ETB 0.00
+    </h2>
+
+    <button type="button"
+      onclick="window.location.href='withdraw.html'">
+      💸 Withdraw
+    </button>
+
+  </div>
+
+
+  <!-- ACCOUNT OVERVIEW -->
+  <h3>Account Overview</h3>
+
+  <div class="overview">
+
+    <div>
+      <p>Yesterday</p>
+      <b id="profileYesterday">ETB 0.00</b>
+    </div>
+
+    <div>
+      <p>Today</p>
+      <b id="profileToday">ETB 0.00</b>
+    </div>
+
+    <div>
+      <p>Total Profit</p>
+      <b id="profileIncome">ETB 0.00</b>
+    </div>
+
+    <div>
+      <p>This Week</p>
+      <b id="profileWeek">ETB 0.00</b>
+    </div>
+
+    <div>
+      <p>Tasks Done</p>
+      <b id="profileTasksDone">0</b>
+    </div>
+
+    <div>
+      <p>Referral</p>
+      <b id="profileReferral">ETB 0.00</b>
+    </div>
+
+  </div>
+
+
+  <!-- REFERRAL CODE -->
+  <h3>My Referral Code</h3>
+
+  <div class="balance-card">
+
+    <p>Share your referral code</p>
+
+    <h2 id="myReferralCode">
+      Loading...
+    </h2>
+
+    <button
+      type="button"
+      id="copyReferralBtn">
+      📋 Copy
+    </button>
+
+  </div>
+
+
+  <!-- QUICK ACCESS -->
+  <h3>Quick Access</h3>
+
+  <div class="quick-menu">
+
+    <div onclick="window.location.href='personal.html'">
+      📄 Personal Information
+      <span>›</span>
+    </div>
+
+    <div onclick="window.location.href='daily-report.html'">
+      📊 Daily Report
+      <span>›</span>
+    </div>
+
+    <div onclick="window.location.href='team-report.html'">
+      👥 Team Report
+      <span>›</span>
+    </div>
+
+    <div onclick="window.location.href='invite.html'">
+      🔗 Invite Friends
+      <span>›</span>
+    </div>
+
+    <div onclick="window.location.href='transactions.html'">
+      🧾 Transaction Bills
+      <span>›</span>
+    </div>
+
+    <div onclick="downloadApp()">
+      ⬇️ Download App
+      <span>›</span>
+    </div>
+
+  </div>
+
+
+  <!-- LOGOUT -->
+  <button
+    type="button"
+    id="logoutBtn">
+    🚪 Logout Account
+  </button>
+
+
+  <!-- BACK -->
+  <p>
+    <a href="home.html">
+      ← Back Home
+    </a>
+  </p>
+
+</div>
+
+
+<!-- CCUS APP.JS -->
+<script type="module" src="app.js"></script>
+
+
+<script>
+function downloadApp() {
+
+  alert(
+    "Download App feature will be available soon."
+  );
+
+}
+</script>
+
+</body>
+</html>

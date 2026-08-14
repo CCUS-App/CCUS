@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>CCUS Withdraw</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+  <style>
+
+    .receiver-card {
+      margin-top: 15px;
+      padding: 18px;
+      border-radius: 15px;
+      background: #ffffff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .receiver-card h3 {
+      margin-top: 0;
+    }
+
+    #withdrawMethod,
+    #withdrawAmount {
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 8px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    #withdrawBtn {
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    #withdrawAmountStatus {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <h1>CCUS</h1>
+
+  <h2>Withdraw</h2>
+
+
+  <!-- =========================================
+       WITHDRAW METHOD
+  ========================================== -->
+
+  <p>
+    Select your bank method
+  </p>
+
+  <select id="withdrawMethod">
+
+    <option value="">
+      Select Method
+    </option>
+
+    <option value="CBE">
+      Commercial Bank of Ethiopia
+    </option>
+
+    <option value="Telebirr">
+      Telebirr
+    </option>
+
+    <option value="M-Pesa">
+      M-Pesa
+    </option>
+
+  </select>
+
+
+  <!-- =========================================
+       WITHDRAWAL AMOUNT
+       LOADED FROM ADMIN/FIREBASE
+  ========================================== -->
+
+  <p>
+    Withdrawal Amount
+  </p>
+
+  <select id="withdrawAmount">
+
+    <option value="">
+      Loading amounts...
+    </option>
+
+  </select>
+
+
+  <p id="withdrawAmountStatus">
+    Loading withdrawal amounts...
+  </p>
+
+
+  <!-- =========================================
+       CONFIRM WITHDRAWAL
+  ========================================== -->
+
+  <button
+    id="withdrawBtn"
+    type="button"
+  >
+    Confirm Withdrawal
+  </button>
+
+
+  <!-- =========================================
+       NOTES
+  ========================================== -->
+
+  <div class="receiver-card">
+
+    <h3>
+      Notes
+    </h3>
+
+    <p>
+      • Withdrawal arrival date: Three times per month.
+    </p>
+
+    <p id="minimumWithdrawalNote">
+      • Withdrawal amounts are managed by Admin.
+    </p>
+
+    <p>
+      • Please ensure your bank information is correct.
+    </p>
+
+  </div>
+
+
+  <!-- =========================================
+       BACK HOME
+  ========================================== -->
+
+  <p>
+
+    <a href="home.html">
+      ← Back Home
+    </a>
+
+  </p>
+
+
+</div>
+
+
+<!-- =========================================
+     WITHDRAW JS
+========================================== -->
+
+<script
+  type="module"
+  src="withdraw.js"
+></script>
+
+
+<!-- =========================================
+     LOAD WITHDRAWAL SETTINGS
+     FROM FIREBASE
+========================================== -->
+
+<script type="module">
+
+  import { db } from "./firebase-config.js";
+
+  import {
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+
+
+  const withdrawAmount =
+    document.getElementById(
+      "withdrawAmount"
+    );
+
+
+  const statusText =
+    document.getElementById(
+      "withdrawAmountStatus"
+    );
+
+
+  const minimumNote =
+    document.getElementById(
+      "minimumWithdrawalNote"
+    );
+
+
+  // =========================================
+  // LOAD ADMIN WITHDRAWAL AMOUNTS
+  // =========================================
+
+  async function loadWithdrawalAmounts() {
+
+    try {
+
+      if (withdrawAmount) {
+
+        withdrawAmount.innerHTML = `
+          <option value="">
+            Loading amounts...
+          </option>
+        `;
+
+      }
+
+
+      const settingsRef =
+        doc(
+          db,
+          "settings",
+          "withdrawalSettings"
+        );
+
+
+      const settingsSnap =
+        await getDoc(
+          settingsRef
+        );
+
+
+      // =======================================
+      // SETTINGS NOT FOUND
+      // =======================================
+
+      if (!settingsSnap.exists()) {
+
+        console.warn(
+          "Withdrawal settings not found."
+        );
+
+
+        if (withdrawAmount) {
+
+          withdrawAmount.innerHTML = `
+            <option value="">
+              Withdrawal amounts not configured
+            </option>
+          `;
+
+        }
+
+
+        if (statusText) {
+
+          statusText.textContent =
+            "❌ Withdrawal amounts are not configured by Admin.";
+
+        }
+
+
+        return;
+
+      }
+
+
+      const data =
+        settingsSnap.data();
+
+
+      // =======================================
+      // GET AMOUNTS ARRAY
+      // =======================================
+
+      const amounts =
+        Array.isArray(data.amounts)
+          ? data.amounts
+          : [];
+
+
+      // =======================================
+      // CLEAN + VALIDATE
+      // =======================================
+
+      const validAmounts =
+        amounts
+          .map(
+            amount =>
+              Number(amount)
+          )
+          .filter(
+            amount =>
+              Number.isFinite(amount) &&
+              amount > 0
+          );
+
+
+      // Remove duplicates
+      const uniqueAmounts =
+        [...new Set(validAmounts)];
+
+
+      // Sort from smallest to largest
+      uniqueAmounts.sort(
+        (a, b) => a - b
+      );
+
+
+      // =======================================
+      // NO VALID AMOUNT
+      // =======================================
+
+      if (
+        uniqueAmounts.length === 0
+      ) {
+
+        if (withdrawAmount) {
+
+          withdrawAmount.innerHTML = `
+            <option value="">
+              No withdrawal amounts available
+            </option>
+          `;
+
+        }
+
+
+        if (statusText) {
+
+          statusText.textContent =
+            "❌ Admin has not configured withdrawal amounts.";
+
+        }
+
+
+        return;
+
+      }
+
+
+      // =======================================
+      // SHOW AMOUNTS
+      // =======================================
+
+      if (withdrawAmount) {
+
+        withdrawAmount.innerHTML = "";
+
+        const firstOption =
+          document.createElement(
+            "option"
+          );
+
+        firstOption.value = "";
+
+        firstOption.textContent =
+          "Select Amount";
+
+        withdrawAmount.appendChild(
+          firstOption
+        );
+
+
+        uniqueAmounts.forEach(
+          amount => {
+
+            const option =
+              document.createElement(
+                "option"
+              );
+
+            option.value =
+              String(amount);
+
+            option.textContent =
+              Number(amount)
+                .toLocaleString() +
+              " ETB";
+
+            withdrawAmount.appendChild(
+              option
+            );
+
+          }
+        );
+
+      }
+
+
+      // =======================================
+      // STATUS
+      // =======================================
+
+      if (statusText) {
+
+        statusText.textContent =
+          "✅ Withdrawal amounts loaded.";
+
+      }
+
+
+      // =======================================
+      // MINIMUM AMOUNT
+      // =======================================
+
+      const minimumAmount =
+        uniqueAmounts[0];
+
+
+      if (minimumNote) {
+
+        minimumNote.textContent =
+          "• Minimum withdrawal amount is " +
+          Number(
+            minimumAmount
+          ).toLocaleString() +
+          " ETB.";
+
+      }
+
+
+      console.log(
+        "WITHDRAWAL AMOUNTS:",
+        uniqueAmounts
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "LOAD WITHDRAWAL SETTINGS ERROR:",
+        error
+      );
+
+
+      if (withdrawAmount) {
+
+        withdrawAmount.innerHTML = `
+          <option value="">
+            Failed to load amounts
+          </option>
+        `;
+
+      }
+
+
+      if (statusText) {
+
+        statusText.textContent =
+          "❌ Failed to load withdrawal amounts.";
+
+      }
+
+    }
+
+  }
+
+
+  // =========================================
+  // START
+  // =========================================
+
+  loadWithdrawalAmounts();
+
+</script>
+
+
+</body>
+
+</html>
